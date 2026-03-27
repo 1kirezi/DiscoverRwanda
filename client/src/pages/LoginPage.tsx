@@ -70,15 +70,6 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Demo credentials */}
-          <div className="mt-6 p-4 bg-gray-50 rounded-xl border border-gray-100">
-            <p className="text-xs font-medium text-gray-600 mb-2">Demo accounts:</p>
-            <div className="space-y-1 text-xs text-gray-500">
-              <p>Student: <span className="font-mono">alice@example.com</span> / <span className="font-mono">Student@1234</span></p>
-              <p>Business: <span className="font-mono">kigali@safarilodge.rw</span> / <span className="font-mono">Business@1234</span></p>
-              <p>Admin: <span className="font-mono">admin@discoverrwanda.com</span> / <span className="font-mono">Admin@1234</span></p>
-            </div>
-          </div>
         </div>
       </div>
     </div>
