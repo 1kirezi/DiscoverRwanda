@@ -1,15 +1,26 @@
 #!/bin/sh
 set -e
 
-DB_HOST="${DB_HOST:-db}"
-DB_PORT="${DB_PORT:-3306}"
+PORT="${PORT:-8000}"
 
-echo "Waiting for MySQL at ${DB_HOST}:${DB_PORT}..."
+echo "Waiting for database..."
 until python - <<'PY'
 import os
-import pymysql
+from sqlalchemy import create_engine, text
+
+db_url = os.getenv("DATABASE_URL", "").strip()
+
+if db_url:
+    engine = create_engine(db_url, pool_pre_ping=True)
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+    finally:
+        engine.dispose()
+    raise SystemExit(0)
 
 try:
+    import pymysql
     conn = pymysql.connect(
         host=os.getenv("DB_HOST", "db"),
         port=int(os.getenv("DB_PORT", "3306")),
@@ -17,7 +28,6 @@ try:
         password=os.getenv("DB_PASSWORD"),
         database=os.getenv("DB_NAME"),
         connect_timeout=3,
-        ssl_disabled=True,
     )
     conn.close()
 except Exception:
@@ -27,7 +37,7 @@ PY
 do
   sleep 2
 done
-echo "MySQL is up."
+echo "Database is up."
 
 if [ "${AUTO_MIGRATE:-true}" = "true" ]; then
   echo "Running Alembic migrations..."
@@ -40,4 +50,4 @@ if [ "${AUTO_SEED:-true}" = "true" ]; then
 fi
 
 echo "Starting API..."
-exec uvicorn app.main:app --host 0.0.0.0 --port 8000
+exec uvicorn app.main:app --host 0.0.0.0 --port "${PORT}"
