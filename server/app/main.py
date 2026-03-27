@@ -1,7 +1,7 @@
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Query
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from contextlib import asynccontextmanager
 import os, json
 from app.config import settings
@@ -73,15 +73,37 @@ app.include_router(learning.router)
 app.include_router(mentorship.router)
 app.include_router(admin.router)
 
+FRONTEND_DIST_DIR = os.path.join(os.path.dirname(__file__), "static")
+
 
 @app.get("/", tags=["Health"])
 def root():
+    index_path = os.path.join(FRONTEND_DIST_DIR, "index.html")
+    if os.path.exists(index_path):
+        return FileResponse(index_path)
     return {"status": "ok", "app": settings.APP_NAME, "version": settings.APP_VERSION, "docs": "/docs"}
 
 
 @app.get("/health", tags=["Health"])
 def health():
     return {"status": "healthy"}
+
+
+@app.get("/{full_path:path}", include_in_schema=False)
+def serve_spa(full_path: str):
+    # Keep API and infrastructure routes out of SPA fallback.
+    excluded_prefixes = ("api", "api/", "uploads", "uploads/", "docs", "redoc", "openapi.json", "health", "ws", "ws/")
+    if full_path in excluded_prefixes or full_path.startswith(excluded_prefixes):
+        raise HTTPException(status_code=404, detail="Not found")
+
+    requested_path = os.path.join(FRONTEND_DIST_DIR, full_path)
+    if os.path.isfile(requested_path):
+        return FileResponse(requested_path)
+
+    index_path = os.path.join(FRONTEND_DIST_DIR, "index.html")
+    if os.path.exists(index_path):
+        return FileResponse(index_path)
+    raise HTTPException(status_code=404, detail="Frontend not built")
 
 
 # ── WebSocket: real-time project chat ─────────────────────────────────────────
