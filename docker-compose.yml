@@ -1,0 +1,74 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: discover-rwanda-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: discover_rwanda
+      MYSQL_USER: dr_user
+      MYSQL_PASSWORD: dr_pass
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    container_name: discover-rwanda-redis
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: discover-rwanda-api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      APP_NAME: Discover Rwanda
+      APP_VERSION: 1.0.0
+      DEBUG: "true"
+      SECRET_KEY: change-this-for-non-demo-use
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 60
+      REFRESH_TOKEN_EXPIRE_DAYS: 7
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: dr_user
+      DB_PASSWORD: dr_pass
+      DB_NAME: discover_rwanda
+      DATABASE_URL: mysql+pymysql://dr_user:dr_pass@db:3306/discover_rwanda
+      REDIS_URL: redis://redis:6379/0
+      ALLOWED_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+      UPLOAD_DIR: uploads
+      AUTO_MIGRATE: "true"
+      AUTO_SEED: "true"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./server/uploads:/app/uploads
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: discover-rwanda-client
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_started
+    environment:
+      VITE_BACKEND_TARGET: http://api:8000
+    ports:
+      - "3000:3000"
+
+volumes:
+  mysql_data:

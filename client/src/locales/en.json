@@ -1,0 +1,57 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "challenges": "Challenges",
+    "projects": "Projects",
+    "learning": "Learning",
+    "mentors": "Mentors",
+    "portfolio": "Portfolio",
+    "admin": "Admin"
+  },
+  "auth": {
+    "login": "Sign in",
+    "register": "Create account",
+    "email": "Email address",
+    "password": "Password",
+    "fullName": "Full name",
+    "role": "I am a...",
+    "loginTitle": "Welcome back",
+    "registerTitle": "Join Discover Rwanda",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "logout": "Sign out"
+  },
+  "challenges": {
+    "title": "Challenges",
+    "browse": "Browse challenges",
+    "matched": "My matches",
+    "create": "Post a challenge",
+    "difficulty": "Difficulty",
+    "skills": "Required skills",
+    "deadline": "Deadline",
+    "applyNow": "Join a team",
+    "teamSize": "Team size",
+    "weeksEstimate": "weeks"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "search": "Search",
+    "filter": "Filter",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "learnMore": "Learn more"
+  },
+  "roles": {
+    "student": "Student",
+    "business": "Tourism Business",
+    "faculty": "Faculty / Staff",
+    "admin": "Admin"
+  }
+}

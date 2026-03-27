@@ -1,0 +1,57 @@
+{
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "challenges": "Défis",
+    "projects": "Projets",
+    "learning": "Apprentissage",
+    "mentors": "Mentors",
+    "portfolio": "Portfolio",
+    "admin": "Administration"
+  },
+  "auth": {
+    "login": "Se connecter",
+    "register": "Créer un compte",
+    "email": "Adresse e-mail",
+    "password": "Mot de passe",
+    "fullName": "Nom complet",
+    "role": "Je suis...",
+    "loginTitle": "Bon retour",
+    "registerTitle": "Rejoindre Discover Rwanda",
+    "noAccount": "Pas encore de compte ?",
+    "hasAccount": "Déjà un compte ?",
+    "logout": "Se déconnecter"
+  },
+  "challenges": {
+    "title": "Défis",
+    "browse": "Parcourir les défis",
+    "matched": "Mes correspondances",
+    "create": "Publier un défi",
+    "difficulty": "Difficulté",
+    "skills": "Compétences requises",
+    "deadline": "Date limite",
+    "applyNow": "Rejoindre une équipe",
+    "teamSize": "Taille de l'équipe",
+    "weeksEstimate": "semaines"
+  },
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "view": "Voir",
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "submit": "Soumettre",
+    "back": "Retour",
+    "next": "Suivant",
+    "learnMore": "En savoir plus"
+  },
+  "roles": {
+    "student": "Étudiant",
+    "business": "Entreprise touristique",
+    "faculty": "Faculté / Personnel",
+    "admin": "Administrateur"
+  }
+}
