@@ -42,6 +42,7 @@ export default function ChallengeDetailPage() {
   if (!challenge) return <div className="text-gray-500">Challenge not found</div>
 
   const isStudent = user?.role === 'student'
+  const isFaculty = user?.role === 'faculty'
   const isAdmin = user?.role === 'admin'
   const userTeam = teams?.find((t: any) => t.members?.some((m: any) => m.user_id === user?.id))
 
@@ -101,8 +102,10 @@ export default function ChallengeDetailPage() {
           <div className="card">
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-50">
               <h3 className="font-semibold">Teams ({teams?.length || 0})</h3>
-              {isStudent && !userTeam && challenge.status === 'active' && (
-                <button onClick={() => setShowCreateTeam(true)} className="btn-primary btn-sm">+ Create team</button>
+              {(isStudent || isFaculty) && !userTeam && challenge.status === 'active' && (
+                <button onClick={() => setShowCreateTeam(true)} className="btn-primary btn-sm">
+                  {isFaculty ? '+ Create team (Faculty)' : '+ Create team'}
+                </button>
               )}
             </div>
             <div className="divide-y divide-gray-50">
@@ -195,7 +198,11 @@ export default function ChallengeDetailPage() {
       </div>
 
       {/* Create team modal */}
-      <Modal open={showCreateTeam} onClose={() => setShowCreateTeam(false)} title="Create a new team">
+      <Modal
+        open={showCreateTeam}
+        onClose={() => setShowCreateTeam(false)}
+        title={isFaculty ? 'Create a new team (Faculty)' : 'Create a new team'}
+      >
         <form onSubmit={handleSubmit(d => createTeamMutation.mutate(d))} className="space-y-4">
           <div>
             <label className="label">Team name *</label>
