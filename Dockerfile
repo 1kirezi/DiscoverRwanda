@@ -4,7 +4,7 @@ WORKDIR /build/client
 COPY client/package*.json ./
 RUN npm install --legacy-peer-deps
 COPY client/ ./
-RUN npm run build
+RUN node ./node_modules/typescript/bin/tsc && node ./node_modules/vite/bin/vite.js build
 
 FROM python:3.11-slim
 
