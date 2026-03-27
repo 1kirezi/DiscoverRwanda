@@ -1,4 +1,4 @@
-# Discover Rwanda Setup Guide
+# Discover Rwanda — Setup Guide
 
 ## Prerequisites
 - Python 3.11+
@@ -30,26 +30,22 @@ Notes:
 
 ---
 
-## Deploy on Render (Web Services, no Redis)
+## Deploy on Render (single web service, no Redis)
 
-This repo includes a `render.yaml` for two Render web services:
-- API: `discover_Rwanda-main/server`
-- Client: `discover_Rwanda-main/client`
+This repo includes a root `Dockerfile` and `render.yaml` for a single Render web service:
+- Builds the frontend from `client/`
+- Serves frontend + API from one FastAPI container (`server/`)
 
-### Backend (API) required settings
+### Required settings
 - Use your external MySQL (for example Aiven) in `DATABASE_URL`.
 - Set `SECRET_KEY` to a strong random string.
-- Set `ALLOWED_ORIGINS` to your Render client URL(s), comma-separated.
+- Set `ALLOWED_ORIGINS` to your public Render app URL(s), comma-separated.
 - Keep `AUTO_MIGRATE=true`.
 - For production, keep `AUTO_SEED=false`.
 
-### Frontend (Client) required settings
-- Set `VITE_BACKEND_TARGET` to your API Render URL, for example:
-  - `https://discover-rwanda-api.onrender.com`
-
 Notes:
 - Redis is not required for this deployment path.
-- The API container now honors Render's `PORT` automatically.
+- The app honors Render's `PORT` automatically.
 
 ---
 
