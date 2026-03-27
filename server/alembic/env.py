@@ -1,50 +1,35 @@
 from logging.config import fileConfig
-from sqlalchemy import engine_from_config, pool
+from sqlalchemy import pool
 from alembic import context
 import sys, os
-
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-
-from app.database import Base
+from app.database import Base, engine
 from app.config import settings
 
-# Import each model file explicitly — do NOT use "from app.models import *".
-# On Windows, sys.path manipulation causes the same .py file to load under
-# two different module identities, making SQLAlchemy see the table registered
-# twice on the same MetaData and raise InvalidRequestError.
-import app.models.user      # noqa: F401
-import app.models.challenge  # noqa: F401
-import app.models.project    # noqa: F401
-import app.models.learning   # noqa: F401
+import app.models.user
+import app.models.challenge
+import app.models.project
+import app.models.learning
 
 config = context.config
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 target_metadata = Base.metadata
 
-
 def run_migrations_offline() -> None:
-    url = config.get_main_option("sqlalchemy.url")
+    url = settings.DATABASE_URL.split("?")[0]
     context.configure(url=url, target_metadata=target_metadata, literal_binds=True,
                       dialect_opts={"paramstyle": "named"})
     with context.begin_transaction():
         context.run_migrations()
 
-
 def run_migrations_online() -> None:
-    connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
-    )
-    with connectable.connect() as connection:
+    with engine.connect() as connection:
         context.configure(connection=connection, target_metadata=target_metadata)
         with context.begin_transaction():
             context.run_migrations()
-
 
 if context.is_offline_mode():
     run_migrations_offline()
