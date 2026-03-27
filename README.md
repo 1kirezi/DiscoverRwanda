@@ -1,4 +1,4 @@
-# Discover Rwanda — Setup Guide
+# Discover Rwanda Setup Guide
 
 ## Prerequisites
 - Python 3.11+
@@ -27,6 +27,29 @@ Notes:
 - The API container waits for MySQL, runs `alembic upgrade head`, then seeds demo data.
 - Seeding is enabled by default (`AUTO_SEED=true`) and resets demo data on each start.
 - To keep existing data, set `AUTO_SEED=false` in `docker-compose.yml`.
+
+---
+
+## Deploy on Render (Web Services, no Redis)
+
+This repo includes a `render.yaml` for two Render web services:
+- API: `discover_Rwanda-main/server`
+- Client: `discover_Rwanda-main/client`
+
+### Backend (API) required settings
+- Use your external MySQL (for example Aiven) in `DATABASE_URL`.
+- Set `SECRET_KEY` to a strong random string.
+- Set `ALLOWED_ORIGINS` to your Render client URL(s), comma-separated.
+- Keep `AUTO_MIGRATE=true`.
+- For production, keep `AUTO_SEED=false`.
+
+### Frontend (Client) required settings
+- Set `VITE_BACKEND_TARGET` to your API Render URL, for example:
+  - `https://discover-rwanda-api.onrender.com`
+
+Notes:
+- Redis is not required for this deployment path.
+- The API container now honors Render's `PORT` automatically.
 
 ---
 
