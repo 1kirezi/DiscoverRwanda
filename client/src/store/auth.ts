@@ -8,6 +8,7 @@ interface User {
   full_name: string
   role: 'student' | 'business' | 'faculty' | 'admin'
   avatar_url?: string
+  bio?: string
   verification_status: string
 }
 
